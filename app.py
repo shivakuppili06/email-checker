@@ -30,7 +30,12 @@ import uuid
 import dns.resolver
 from flask import Flask, Response, jsonify, render_template, request
 
-app = Flask(__name__)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+app = Flask(
+    __name__,
+    template_folder=os.path.join(BASE_DIR, "templates"),
+    static_folder=os.path.join(BASE_DIR, "static"),
+)
 
 # RFC-5322-compliant pattern covering valid recipient syntax
 EMAIL_RE = re.compile(
@@ -73,7 +78,12 @@ _DNS_CACHE_LOCK = threading.Lock()
 DNS_CACHE_TTL = 300.0  # 5 minutes
 
 # SQLite-backed session storage for shareable dockets (FIFO-capped, multi-worker safe)
-DB_PATH = os.environ.get("SESSIONS_DB_PATH", os.path.join(os.path.dirname(os.path.abspath(__file__)), "sessions.db"))
+def _get_default_db_path() -> str:
+    if os.environ.get("VERCEL") or os.environ.get("AWS_LAMBDA_FUNCTION_NAME"):
+        return "/tmp/sessions.db"
+    return os.path.join(BASE_DIR, "sessions.db")
+
+DB_PATH = os.environ.get("SESSIONS_DB_PATH", _get_default_db_path())
 MAX_SAVED_SESSIONS = 1000
 import json
 import sqlite3
@@ -81,24 +91,30 @@ import sqlite3
 
 def get_db_connection() -> sqlite3.Connection:
     conn = sqlite3.connect(DB_PATH, timeout=10.0)
-    conn.execute("PRAGMA journal_mode=WAL;")
+    try:
+        conn.execute("PRAGMA journal_mode=WAL;")
+    except Exception:
+        pass
     return conn
 
 
 def init_db() -> None:
-    conn = get_db_connection()
     try:
-        with conn:
-            conn.execute("""
-                CREATE TABLE IF NOT EXISTS sessions (
-                    id TEXT PRIMARY KEY,
-                    data TEXT NOT NULL,
-                    created_at REAL NOT NULL
-                );
-            """)
-            conn.execute("CREATE INDEX IF NOT EXISTS idx_sessions_created_at ON sessions(created_at);")
-    finally:
-        conn.close()
+        conn = get_db_connection()
+        try:
+            with conn:
+                conn.execute("""
+                    CREATE TABLE IF NOT EXISTS sessions (
+                        id TEXT PRIMARY KEY,
+                        data TEXT NOT NULL,
+                        created_at REAL NOT NULL
+                    );
+                """)
+                conn.execute("CREATE INDEX IF NOT EXISTS idx_sessions_created_at ON sessions(created_at);")
+        finally:
+            conn.close()
+    except Exception:
+        pass
 
 
 init_db()
