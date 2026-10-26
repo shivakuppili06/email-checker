@@ -371,6 +371,7 @@ def sanitize_csv_field(val: object) -> str:
 
 # --- Web Page Routes ---
 @app.route("/")
+@app.route("/api/index")
 def index():
     return render_template("index.html")
 
