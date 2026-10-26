@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Email Deliverability Checker — Postal Inspection Bureau</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="viewport-locked" data-session-id="{{ session_id or '' }}">
+
+{% include '_nav.html' %}
+
+<div class="tri-layout">
+
+  <!-- ========================================================
+       SECTION 1: MANIFEST & CONTROL STATION (LEFT)
+       ======================================================== -->
+  <section class="tri-pane pane-input">
+    <div class="pane-header">
+      <div class="pane-title-wrap">
+        <span class="pane-tag">STAGE I // DISPATCH ENTRY</span>
+        <h2 class="pane-title">Manifest Entry</h2>
+      </div>
+      <label for="fileInput" class="stamp-btn upload-stamp" title="Load addresses from CSV or TXT file">
+        <span>⤓</span> Import .CSV / .TXT
+        <input type="file" id="fileInput" accept=".csv,.txt" style="display:none">
+      </label>
+    </div>
+
+    <div class="file-manifest-info" id="fileHintBar">
+      <span id="fileName" class="file-manifest-text">Type or paste addresses below, or click 'Import' / drop a file here</span>
+    </div>
+
+    <div class="input-editor-wrapper">
+      <textarea id="emails" placeholder="Enter recipient addresses, one per line:
+jane.doe@company.org
+invalid@@format
+support@mailinator.com
+clerk@gmial.com"></textarea>
+    </div>
+
+    <div class="pane-footer-actions">
+      <button id="checkBtn" class="stamp-btn primary-stamp">
+        EXECUTE INSPECTION
+      </button>
+      <div class="btn-group-row">
+        <button id="exportBtn" class="stamp-btn secondary-stamp" disabled title="Export results to a verified CSV log">
+          <span class="btn-icon">📥</span> EXPORT CSV
+        </button>
+        <button id="shareBtn" class="stamp-btn secondary-stamp" disabled title="Copy shareable docket link">
+          <span class="btn-icon">🔗</span> SHARE DOCKET
+        </button>
+      </div>
+      <div class="status-ticker">
+        <span id="status" class="manifest-status">System ready.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================
+       SECTION 2: HEALTH METRICS & JURISDICTIONS (CENTER)
+       ======================================================== -->
+  <section class="tri-pane pane-analytics">
+    <div class="pane-header">
+      <div class="pane-title-wrap">
+        <span class="pane-tag">STAGE II // AUDIT METRICS</span>
+        <h2 class="pane-title">Health & Domains</h2>
+      </div>
+    </div>
+
+    <!-- Live Stamp Counters (5 Metric Matrix) -->
+    <div id="summary" class="summary-matrix">
+      <div class="stat-cell delivered">
+        <span class="stat-mark">DELIVERED</span>
+        <span id="sLikely" class="stat-count">0</span>
+        <span class="stat-label">Confirmed Mailbox</span>
+      </div>
+      <div class="stat-cell returned">
+        <span class="stat-mark">RETURNED</span>
+        <span id="sUnlikely" class="stat-count">0</span>
+        <span class="stat-label">Failed / Bounced</span>
+      </div>
+      <div class="stat-cell unverified">
+        <span class="stat-mark">UNVERIFIED</span>
+        <span id="sUnknown" class="stat-count">0</span>
+        <span class="stat-label">Catch-all / Greylist</span>
+      </div>
+      <div class="stat-cell domains">
+        <span class="stat-mark">DOMAINS</span>
+        <span id="sDomains" class="stat-count">0</span>
+        <span class="stat-label">Unique Hosts</span>
+      </div>
+      <div class="stat-cell total">
+        <span class="stat-mark">TOTAL</span>
+        <span id="sTotal" class="stat-count">0</span>
+        <span class="stat-label">Audited Batch</span>
+      </div>
+    </div>
+
+    <!-- Domain Breakdown Scrollable Box -->
+    <div class="domain-box-wrapper">
+      <div class="box-subheading">
+        <span>Jurisdiction Breakdown</span>
+        <span class="sub-counter" id="domainCount">0 Domains</span>
+      </div>
+      <div id="domainSummary" class="domain-scroll-area">
+        <div class="empty-docket-hint">Execute an inspection to populate domain routing and catch-all metrics.</div>
+      </div>
+    </div>
+
+    <!-- Pre-Data Notice Callout -->
+    <div class="envelope-safety-callout">
+      <span class="seal-icon">🛡️</span>
+      <p><strong>Zero Mail Transmission:</strong> Probing terminates cleanly before <code>DATA</code>. No messages are ever dispatched to any recipient.</p>
+    </div>
+  </section>
+
+  <!-- ========================================================
+       SECTION 3: INDIVIDUAL ADDRESS DOSSIER LOGS (RIGHT)
+       ======================================================== -->
+  <section class="tri-pane pane-dossier">
+    <div class="pane-header">
+      <div class="pane-title-wrap">
+        <span class="pane-tag">STAGE III // INSPECTION DOSSIER</span>
+        <h2 class="pane-title">Address Records</h2>
+      </div>
+    </div>
+
+    <div id="results" class="results-scroll-container">
+      <div class="empty-state-card">
+        <span class="empty-stamp">AWAITING MANIFEST</span>
+        <p>Recipient records will populate here in real-time with authentic ink stamp verdicts, confidence grades, and diagnostic evidence.</p>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
