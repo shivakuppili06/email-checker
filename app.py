@@ -1,7 +1,7 @@
 """
-Postal Inspection Bureau — Email Deliverability Pipeline
---------------------------------------------------------
-Provides best-effort verification of recipient email addresses.
+MailCheck — Email Deliverability Verification Engine
+----------------------------------------------------
+Provides real-time verification of recipient email addresses.
 Audits syntax, disposable providers, role mailboxes, lexical typos,
 DNS MX records (with A/AAAA fallback), catch-all behavior, and safe
 envelope-level SMTP probing (with retry for 4xx greylisting).
@@ -242,7 +242,7 @@ def _single_smtp_rcpt(mx_host: str, mail_from: str, rcpt_to: str) -> Optional[in
     try:
         with smtplib.SMTP(timeout=SMTP_TIMEOUT) as smtp:
             smtp.connect(mx_host, 25)
-            smtp.helo("checker.postal.local")
+            smtp.helo("verify.mailcheck.local")
             smtp.mail(mail_from)
             code, _ = smtp.rcpt(rcpt_to)
             smtp.quit()
@@ -324,7 +324,7 @@ def check_single_email(raw: str) -> CheckResult:
     best_mx = mx_records[0][1]
 
     # Catch-all check: probe a randomized mailbox that should not exist
-    probe_sender = f"probe@{socket.getfqdn() or 'postal.local'}"
+    probe_sender = f"probe@{socket.getfqdn() or 'mailcheck.local'}"
     catch_all_accept = smtp_probe(best_mx, probe_sender, f"{random_local_part()}@{domain}")
 
     if catch_all_accept is True:
@@ -501,7 +501,7 @@ def api_export():
     return Response(
         buf.getvalue(),
         mimetype="text/csv",
-        headers={"Content-Disposition": "attachment; filename=postal_inspection_dossier.csv"},
+        headers={"Content-Disposition": "attachment; filename=verified_emails.csv"},
     )
 
 
