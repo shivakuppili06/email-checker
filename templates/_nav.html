@@ -1,18 +1,53 @@
-<header class="topnav">
-  <div class="topnav-inner">
-    <div class="brand">
-      <a href="{{ url_for('index') }}" class="brand-link">
-        <span class="postal-mark">POST</span>
-        <span class="brand-name">Postal Inspection Bureau</span>
+<header class="navbar">
+  <div class="nav-container">
+    <div class="nav-brand">
+      <a href="{{ url_for('index') }}" class="brand-link" aria-label="MailCheck Home">
+        <span class="brand-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+            <polyline points="22,6 12,13 2,6"></polyline>
+            <polyline points="9 16 12 18 19 11"></polyline>
+          </svg>
+        </span>
+        <div class="brand-text">
+          <span class="brand-title">MailCheck</span>
+          <span class="brand-badge">Deliverability Engine</span>
+        </div>
       </a>
-      <span class="brand-sub">Deliverability &amp; Dispatch Verification</span>
     </div>
-    <nav class="nav-links">
-      <a href="{{ url_for('index') }}" class="nav-item active">Inspect</a>
-      <button id="themeToggle" class="theme-toggle-btn" aria-label="Toggle paper tone (light/dark)" title="Switch between Paper &amp; Dark Archive tone">
-        <span class="theme-icon">🌓</span> <span class="theme-label">TONE</span>
+
+    <nav class="nav-actions">
+      <button id="sampleBtn" class="nav-btn secondary-btn" type="button" title="Load sample test addresses">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+          <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+        </svg>
+        <span>Sample list</span>
+      </button>
+
+      <a href="https://github.com/shivakuppili06/email-checker" target="_blank" rel="noopener noreferrer" class="nav-btn ghost-btn" title="View source on GitHub">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+        </svg>
+        <span>GitHub</span>
+      </a>
+
+      <button id="themeToggle" class="nav-btn theme-btn" type="button" aria-label="Toggle dark/light theme" title="Toggle theme">
+        <svg class="sun-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <svg class="moon-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
       </button>
     </nav>
   </div>
-  <div class="hairline-rule"></div>
 </header>
